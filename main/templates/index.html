@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Головна сторінка{% endblock %}
+
+{% block content %}
+<div class="main-panel mb-5">
+  <div class="panel-header d-flex justify-content-between align-items-center">
+    <h2 class="fw-bold">Дослідіть питання спільноти</h2>
+    <a href="{{ url_for('main.create') }}" class="btn btn-primary">Задати питання</a>
+  </div>
+
+  <!-- Популярні теги -->
+  <div class="tags-list mt-3 mb-4">
+    {% for tag in ['javascript', 'python', 'php', 'java', 'c#', 'html', 'c++', 'android', 'css', 'jquery'] %}
+      <a href="{{ url_for('main.posts') }}?tag={{ tag }}" class="badge bg-secondary text-light me-2 mb-2">
+        {{ tag }}
+      </a>
+    {% endfor %}
+    <a href="{{ url_for('main.tags') }}" class="text-decoration-none d-inline-block mt-2">→ більше міток</a>
+  </div>
+
+  <!-- Фільтри -->
+  <div class="filters d-flex gap-2 mb-4">
+    <a href="{{ url_for('main.index', period='all') }}" class="btn btn-outline-secondary {% if current_filter == 'all' %}active{% endif %}">Нові</a>
+    <a href="{{ url_for('main.index', period='month') }}" class="btn btn-outline-secondary {% if current_filter == 'month' %}active{% endif %}">За місяць</a>
+    <a href="{{ url_for('main.index', period='year') }}" class="btn btn-outline-secondary {% if current_filter == 'year' %}active{% endif %}">За рік</a>
+  </div>
+</div>
+
+<!-- Список постів -->
+<div class="container mt-4">
+  {% if posts %}
+    {% for post in posts %}
+      <div class="card mb-3 shadow-sm border rounded-4 p-4">
+        <div class="d-flex">
+          <!-- Статистика -->
+          <div class="text-center me-4" style="width: 110px;">
+            <div class="fw-semibold small text-muted mb-2">{{ post.votes or 0 }} голосів</div>
+            <div class="fw-semibold small text-muted mb-2">{{ post.comments|length or 0 }} відповідей</div>
+            <div class="fw-semibold small text-muted">{{ post.views or 0 }} переглядів</div>
+          </div>
+
+          <!-- Основна частина -->
+          <div class="flex-grow-1">
+            <a href="{{ url_for('main.post_detail', post_id=post.id) }}" class="h5 text-decoration-none text-dark mb-2 d-block">
+              {{ post.title }}
+            </a>
+
+            {% if post.tags %}
+            <div class="mb-2">
+              {% for tag in post.tags %}
+                <a href="{{ url_for('main.tag_detail', tag_id=tag.id) }}" class="badge bg-light text-dark border me-1">
+                  {{ tag.name }}
+                </a>
+              {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="text-muted small">
+              <i class="bi bi-person"></i>
+              {{ post.author.username }} — {{ post.created_at.strftime('%d.%m.%Y %H:%M') }}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-info">{{ empty_message }}</div>
+  {% endif %}
+</div>
+
+{% endblock %}

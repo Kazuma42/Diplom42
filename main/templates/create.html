@@ -1,0 +1,89 @@
+{% extends 'base.html' %} 
+
+{% block title %} 
+Додавання запису
+{% endblock %}
+
+{% block content %} 
+<h2 class="mb-4">Задайте Питання</h2>
+
+<div class="container mt-4">
+  <form method="POST" action="{{ url_for('main.create') }}" enctype="multipart/form-data">
+    <!-- Заголовок -->
+    <div class="mb-3">
+      <label for="title" class="form-label fw-bold">Заголовок <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="title" name="title" placeholder="У чому полягає ваше запитання? Будьте конкретні." required>
+      <small class="text-muted">Будьте конкретні. Уявіть, що ставите запитання іншій людині.</small>
+    </div>
+
+    <!-- Основна часть -->
+    <div class="mb-3">
+      <label for="text" class="form-label fw-bold">Основна частина <span class="text-danger">*</span></label>
+      <div class="border rounded p-2 bg-light">
+        <div class="d-flex mb-2 gap-2">
+          <button type="button" class="btn btn-sm btn-light border" title="Жирний" onclick="insertAtCursor('**жирний текст**')"><strong>B</strong></button>
+          <button type="button" class="btn btn-sm btn-light border" title="Курсив" onclick="insertAtCursor('_курсив_')"><em>I</em></button>
+          <button type="button" class="btn btn-sm btn-light border" title="Цитата" onclick="insertAtCursor('> цитата\n')">“”</button>
+          <button type="button" class="btn btn-sm btn-light border" title="Код" onclick="insertAtCursor('`код`')"><code>&lt;/&gt;</code></button>
+
+          <!-- Іконка загрузки зображення -->
+          <label for="image" class="btn btn-sm btn-light border mb-0" title="Прикріпити зображення">
+            <i class="bi bi-image"></i>
+          </label>
+          <input type="file" id="image" name="image" accept="image/*" class="d-none" onchange="previewImage(event)">
+        </div>
+
+        <textarea class="form-control" id="text" name="text" rows="8" required placeholder="Додайте всю інформацію, яка може знадобитися для відповіді на ваше запитання"></textarea>
+
+        <!-- Предосмотр зображення -->
+        <div id="imagePreview" class="mt-3"></div>
+      </div>
+    </div>
+
+    <!-- Метки -->
+    <div class="mb-3">
+      <label for="tags" class="form-label fw-bold">Мітки <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="tags" name="tags" placeholder="наприклад, [python, flask, html]">
+      <small class="text-muted">Додайте не більше 5 міток, що описують суть вашого запитання</small>
+    </div>
+
+    <!-- Кнопка -->
+    <button type="submit" class="btn btn-primary">Опублікувати запитання</button>
+  </form>
+</div>
+
+<!-- JavaScript для вставки текста и предпросмотра изображения -->
+<script>
+  const textarea = document.getElementById('text');
+
+  function insertAtCursor(text) {
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const before = textarea.value.substring(0, start);
+    const after = textarea.value.substring(end);
+    textarea.value = before + text + after;
+    textarea.focus();
+    textarea.selectionEnd = start + text.length;
+  }
+
+  function previewImage(event) {
+    const imagePreview = document.getElementById('imagePreview');
+    imagePreview.innerHTML = '';
+
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.className = 'img-fluid mt-2';
+        img.style.maxHeight = '300px';
+        imagePreview.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      imagePreview.innerHTML = '<p class="text-danger">Файл має бути зображенням</p>';
+    }
+  }
+</script>
+{% endblock %}

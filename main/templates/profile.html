@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Профіль користувача - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card shadow-sm rounded-4 p-4">
+
+    <!-- Заголовок: аватар + ім'я + статус -->
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <img src="{{ user.avatar_url or url_for('static', filename='default_avatar.png') }}"
+             class="rounded-circle me-3" style="width: 70px; height: 70px;" alt="avatar">
+        <div>
+          <h2 class="mb-0">{{ user.username }}</h2>
+          {% if user.is_online %}
+            <span class="badge bg-success">🟢 Онлайн</span>
+          {% else %}
+            <span class="badge bg-secondary">⚫ Офлайн</span>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if current_user.is_authenticated and current_user.id == user.id %}
+        <a href="{{ url_for('main.edit_profile') }}" class="btn btn-sm btn-outline-primary">Редагувати профіль</a>
+      {% endif %}
+    </div>
+
+    <!-- Дата останнього візиту -->
+    <p class="text-muted mt-2">
+      Останній візит: {{ user.last_seen.strftime('%d.%m.%Y %H:%M') if user.last_seen else 'Невідомо' }}
+    </p>
+
+    <!-- Інформація -->
+    <div class="mt-3">
+      {% if user.welcome_section %}
+        <div class="alert alert-info">{{ user.welcome_section }}</div>
+      {% endif %}
+
+      {% if user.membership_duration %}
+        <p><strong>Опыт:</strong> {{ user.membership_duration }}</p>
+      {% endif %}
+
+      {% if user.location %}
+        <p><strong>Місто:</strong> {{ user.location }}</p>
+      {% endif %}
+
+      {% if user.email %}
+        <p><strong>Email:</strong> <a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+      {% endif %}
+      
+      <p><strong>Про себе:</strong> {{ user.about if user.about else "Ще не заповнено" }}</p>
+      
+    </div>
+
+    <!-- Статистика -->
+    <hr>
+    <div class="row text-center">
+      <div class="col">
+        <strong>{{ user.posts|length }}</strong><br>Пости
+      </div>
+      <div class="col">
+        <strong>{{ user.comments|length }}</strong><br>Відповіді
+      </div>
+      <div class="col">
+        <strong>{{ user.reputation or 0 }}</strong><br>Репутація
+      </div>
+    </div>
+
+    <!-- Кнопка активності -->
+    <hr>
+    <div class="text-end">
+      <a href="{{ url_for('main.user_activity', user_id=user.id) }}" class="btn btn-outline-secondary">
+        Переглянути активність
+      </a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

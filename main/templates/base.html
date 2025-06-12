@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="{{ get_locale() }}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}StackMonky{% endblock %}</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Основные стили -->
+  <link rel="stylesheet" href="{{ url_for('main.static', filename='css/main.css') }}" />
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <div class="flex-grow-1"> <!-- Основной контент -->
+
+    <!-- Хедер -->
+    <header class="p-3 text-bg-white border-bottom">
+      <div class="container">
+        <div class="row align-items-center justify-content-between">
+          <div class="col-md-3 d-flex align-items-center">
+            <a href="{{ url_for('main.index') }}" class="d-flex align-items-center text-dark text-decoration-none">
+              <img src="{{ url_for('main.static', filename='image/icon.png') }}" alt="Логотип" class="me-2" style="height: 32px;" />
+              <span class="fw-bold">StackMonky</span>
+            </a>
+          </div>
+
+          <div class="col-md-5">
+            <form class="d-flex" role="search" action="{{ url_for('main.posts') }}" method="GET">
+              <input
+                type="search"
+                name="q"
+                class="form-control text-bg-white border-dark"
+                placeholder="{{ _('Поиск...') }}"
+                aria-label="Search"
+                value="{{ request.args.get('q', '') }}"
+              />
+            </form>
+          </div>
+
+          <div class="col-md-4 d-flex align-items-center justify-content-end gap-2">
+            {% if current_user.is_authenticated %}
+              <a href="{{ url_for('main.profile', user_id=current_user.id) }}" class="me-2 text-decoration-none fw-semibold">
+                {{ current_user.username }}
+              </a>
+              <a href="{{ url_for('main.logout') }}" class="btn btn-outline-danger">{{ _('Вийти') }}</a>
+            {% else %}
+              <a href="{{ url_for('main.login') }}" class="btn btn-outline-primary">{{ _('Login') }}</a>
+              <a href="{{ url_for('main.register') }}" class="btn btn-warning">{{ _('Реєстрація') }}</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Flash сообщения -->
+    <div class="container mt-3">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    <main class="container d-flex mt-4">
+      {% if request.endpoint not in ['main.login', 'main.register'] %}
+        <!-- Боковая панель -->
+        <aside class="bg-light p-3 me-4" style="width: 220px;">
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+              <a href="{{ url_for('main.index') }}" class="nav-link {% if request.endpoint == 'main.index' %}active{% endif %} text-dark d-flex align-items-center">
+                <i class="bi bi-house-door-fill me-2"></i> {{ _('Головна') }}
+              </a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="{{ url_for('main.posts') }}" class="nav-link {% if request.endpoint == 'main.posts' %}active{% endif %} text-dark d-flex align-items-center">
+                <i class="bi bi-journal-text me-2"></i> {{ _('Питання') }}
+              </a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="{{ url_for('main.unanswered') }}" class="nav-link text-dark d-flex align-items-center">
+                <i class="bi bi-question-circle me-2"></i> {{ _('Невідповідні') }}
+              </a>
+            <li class="nav-item mb-2">
+              <a href="{{ url_for('main.tags') }}" class="nav-link {% if request.endpoint == 'main.tags' %}active{% endif %} text-dark d-flex align-items-center">
+                <i class="bi bi-tags me-2"></i> {{ _('Мітки') }}
+              </a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link text-dark d-flex align-items-center">
+                <i class="bi bi-people me-2"></i> {{ _('Учасники') }}
+              </a>
+            </li>
+          </ul>
+        </aside>
+      {% endif %}
+
+      <!-- Основной контент -->
+      <div class="flex-grow-1">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Футер -->
+  <footer class="py-3 border-top mt-auto">
+    <div class="container">
+      <ul class="nav justify-content-center pb-3 mb-3">
+        <li class="nav-item"><a href="{{ url_for('main.posts') }}" class="nav-link px-2 text-body-secondary">{{ _('Home') }}</a></li>
+        <li class="nav-item"><a href="{{ url_for('main.create') }}" class="nav-link px-2 text-body-secondary">{{ _('Всі записи') }}</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">{{ _('Pricing') }}</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">{{ _('FAQs') }}</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">{{ _('About') }}</a></li>
+      </ul>
+      <p class="text-center text-body-secondary">© 2025 Company, Inc</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS (Popper и др.) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

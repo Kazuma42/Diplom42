@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Мітки{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <h2 class="mb-4">Популярні мови програмування</h2>
+
+  <!-- Поиск -->
+  <div class="mb-3">
+    <input type="text" id="tagSearch" class="form-control" placeholder="🔍 Фільтрація по імені...">
+  </div>
+
+  <!-- Сетка карточек -->
+  <div class="row row-cols-1 row-cols-md-3 g-4" id="tagsContainer">
+    {% for tag, count in tags %}
+      {% set brightness = 50 + min(count * 10, 200) %}
+      <div class="col tag-card" data-name="{{ tag.name | lower }}">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="bi bi-tag-fill" style="color: rgb({{ brightness }}, 100, 50);"></i>
+              <a href="{{ url_for('main.tag_detail', tag_id=tag.id) }}" class="text-decoration-none">{{ tag.name }}</a>
+            </h5>
+            <p class="card-text" style="min-height: 60px;">{{ tag.description or 'Опис відсутній.' }}</p>
+          </div>
+          <div class="card-footer text-muted small">
+            {{ count }} питань
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <p>Мітки відсутні.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+document.getElementById('tagSearch').addEventListener('input', function () {
+  const search = this.value.toLowerCase();
+  document.querySelectorAll('.tag-card').forEach(card => {
+    const name = card.dataset.name;
+    card.style.display = name.includes(search) ? '' : 'none';
+  });
+});
+</script>
+{% endblock %}

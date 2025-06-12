@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Редагування профілю{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Редагування профілю</h2>
+  
+  <form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+      {{ form.about.label(class="form-label") }}
+      {{ form.about(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.location.label(class="form-label") }}
+      {{ form.location(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.email.label(class="form-label") }}
+      {{ form.email(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.welcome.label(class="form-label") }}
+      {{ form.welcome(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.membership_duration.label(class="form-label") }}
+      {{ form.membership_duration(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.avatar.label(class="form-label") }}
+      {{ form.avatar(class="form-control") }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Зберегти</button>
+    <a href="{{ url_for('main.profile', user_id=current_user.id) }}" class="btn btn-secondary ms-2">Скасувати</a>
+  </form>
+</div>
+{% endblock %}

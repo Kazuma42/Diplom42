@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ post.title }}
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="card shadow-lg mb-5">
+    <div class="card-header bg-white border-0">
+      <h2 class="card-title m-0">{{ post.title }}</h2>
+    </div>
+    <div class="card-body">
+      <p class="card-text fs-5 mb-4">{{ post.text }}</p>
+
+      {% if post.image_filename %}
+      <div class="mb-4 text-center">
+        <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}"
+             alt="Зображення до посту"
+             class="img-fluid rounded shadow">
+      </div>
+      {% endif %}
+
+      <!-- Форма голосування -->
+      <div class="d-flex gap-3 mb-4">
+        <form method="post" class="d-flex gap-2 flex-fill">
+          <button type="submit" name="action" value="like" class="btn btn-success w-100">
+            👍 Подобається
+          </button>
+          <button type="submit" name="action" value="dislike" class="btn btn-danger w-100">
+            👎 Не подобається
+          </button>
+        </form>
+      </div>
+
+      <!-- Статистика -->
+      <ul class="list-inline mb-4">
+        <li class="list-inline-item me-4"><strong>👍 {{ post.likes }}</strong> Лайків</li>
+        <li class="list-inline-item me-4"><strong>👎 {{ post.dislikes }}</strong> Дизлайків</li>
+      </ul>
+
+      <!-- Коментарі -->
+      <div class="mb-5">
+        <h4 class="mb-3">Коментарії</h4>
+        {% for comment in comments %}
+        <div class="card mb-3">
+          <div class="card-body py-2 px-3">
+            <p class="mb-1">{{ comment.text }}</p>
+            <small class="text-muted">Залишено: {{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+          </div>
+        </div>
+        {% else %}
+        <p class="text-muted">Поки що немає коментарів.</p>
+        {% endfor %}
+      </div>
+
+      <!-- Форма додавання коментаря -->
+      <div>
+        <h5 class="mb-3">Залишити коментарій</h5>
+        <form method="post">
+          <div class="mb-3">
+            <textarea class="form-control" id="comment" name="comment" rows="3" placeholder="Ваш коментар тут..."></textarea>
+          </div>
+          <button type="submit" name="action" value="comment" class="btn btn-primary">Відправити</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

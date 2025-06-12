@@ -1,0 +1,192 @@
+/*HEADER*/
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: #fff;
+}
+
+
+.header__img{
+    height: 38px;
+    width: 38px;
+}
+
+
+/*FOOTER*/
+
+
+
+
+/*POSTS*/
+.container {
+  width: 100%;
+  max-width: 900px;
+}
+
+.questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* расстояние между  */
+  align-items: center;
+}
+
+.question {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+  width: 700px;
+  display: flex;
+  font-size: 14px;
+}
+
+.stats-box {
+  text-align: right;
+  margin-right: 20px;
+  font-size: 13px;
+  color: #333;
+  line-height: 1.6;
+  min-width: 80px;
+}
+
+.stats-box .stat strong {
+  font-weight: bold;
+}
+
+.info {
+  flex-grow: 1;
+}
+
+.title {
+  color: #0077cc;
+  text-decoration: none;
+}
+
+.bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: #e1e1e1;
+  padding: 2px 6px;
+  margin-right: 5px;
+  border-radius: 3px;
+  font-size: 12px;
+  color: #2c2c2c;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.tag:hover {
+  background: #d0d0d0;
+  color: #000;
+  cursor: pointer;
+}
+
+.tag:active {
+  background: #bcbcbc;
+}
+
+.author {
+  font-size: 12px;
+  color: gray;
+  white-space: nowrap;
+}
+
+.author span {
+  color: green;
+}
+
+
+/*GLAVNA*/
+.main-panel {
+  padding: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ask-button {
+  background-color: #0a95ff;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.tags-list {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.tag {
+  display: inline-block;
+  background-color: #e1ecf4;
+  color: #39739d;
+  padding: 5px 8px;
+  margin: 3px;
+  border-radius: 3px;
+  font-size: 13px;
+}
+
+.more-tags {
+  margin-left: 8px;
+  font-size: 13px;
+  text-decoration: none;
+  color: #0074cc;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 6px;
+  width: fit-content;
+}
+
+.filter-button {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.filter-button:hover {
+  background-color: #f2f2f2;
+}
+
+.filter-button.active {
+  background-color: #e3ecf6;
+  font-weight: bold;
+}
+
+/*TAGS*/
+.card-title a {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.card-text {
+  color: #555;
+}
+
+.card-footer {
+  font-size: 0.85rem;
+}
+
