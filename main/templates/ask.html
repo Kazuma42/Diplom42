@@ -96,7 +96,7 @@
               </a>
             </li>
             <li class="nav-item mb-2">
-              <a href="{{ url_for('main.users') }}" class="nav-link text-dark d-flex align-items-center">
+              <a href="#" class="nav-link text-dark d-flex align-items-center">
                 <i class="bi bi-people me-2"></i> {{ _('Учасники') }}
               </a>
             </li>
@@ -116,8 +116,11 @@
   <footer class="py-3 border-top mt-auto">
     <div class="container">
       <ul class="nav justify-content-center pb-3 mb-3">
-        <li class="nav-item"><a href="{{ url_for('main.index') }}" class="nav-link px-2 text-body-secondary">{{ _('Головна') }}</a></li>
-        <li class="nav-item"><a href="{{ url_for('main.posts') }}" class="nav-link px-2 text-body-secondary">{{ _('Питання') }}</a></li>
+        <li class="nav-item"><a href="{{ url_for('main.posts') }}" class="nav-link px-2 text-body-secondary">{{ _('Home') }}</a></li>
+        <li class="nav-item"><a href="{{ url_for('main.create') }}" class="nav-link px-2 text-body-secondary">{{ _('Всі записи') }}</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">{{ _('Pricing') }}</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">{{ _('FAQs') }}</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">{{ _('About') }}</a></li>
       </ul>
       <p class="text-center text-body-secondary">© 2025 Company, Inc</p>
     </div>

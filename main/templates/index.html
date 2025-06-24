@@ -10,14 +10,20 @@
   </div>
 
   <!-- Популярні теги -->
-  <div class="tags-list mt-3 mb-4">
-    {% for tag in ['javascript', 'python', 'php', 'java', 'c#', 'html', 'c++', 'android', 'css', 'jquery'] %}
-      <a href="{{ url_for('main.posts') }}?tag={{ tag }}" class="badge bg-secondary text-light me-2 mb-2">
+<div class="tags-list mt-3 mb-4">
+  {% for tag in ['javascript', 'python', 'php', 'java', 'c#', 'html', 'c++', 'android', 'css', 'jquery'] %}
+    {% if tag_ids.get(tag) %}
+      <a href="{{ url_for('main.tag_detail', tag_id=tag_ids[tag]) }}" class="badge bg-secondary text-light me-2 mb-2">
         {{ tag }}
       </a>
-    {% endfor %}
-    <a href="{{ url_for('main.tags') }}" class="text-decoration-none d-inline-block mt-2">→ більше міток</a>
-  </div>
+    {% else %}
+      <span class="badge bg-secondary text-light me-2 mb-2 disabled" title="Тег не знайдено в БД">
+        {{ tag }}
+      </span>
+    {% endif %}
+  {% endfor %}
+  <a href="{{ url_for('main.tags') }}" class="text-decoration-none d-inline-block mt-2">→ більше міток</a>
+</div>
 
   <!-- Фільтри -->
   <div class="filters d-flex gap-2 mb-4">
@@ -34,15 +40,17 @@
       <div class="card mb-3 shadow-sm border rounded-4 p-4">
         <div class="d-flex">
           <!-- Статистика -->
-          <div class="text-center me-4" style="width: 110px;">
-            <div class="fw-semibold small text-muted mb-2">{{ post.votes or 0 }} голосів</div>
-            <div class="fw-semibold small text-muted mb-2">{{ post.comments|length or 0 }} відповідей</div>
-            <div class="fw-semibold small text-muted">{{ post.views or 0 }} переглядів</div>
+          <div class="text-center me-4" style="width: 110px; font-size: 0.85rem; color: #6c757d; flex-shrink: 0;">
+            <div>{{ (post.likes_count - post.dislikes_count) or 0 }} голосів</div>
+            <div>{{ post.comments_count or 0 }} відповідей</div>
+            <div>{{ post.views or 0 }} переглядів</div>
           </div>
 
           <!-- Основна частина -->
-          <div class="flex-grow-1">
-            <a href="{{ url_for('main.post_detail', post_id=post.id) }}" class="h5 text-decoration-none text-dark mb-2 d-block">
+          <div class="flex-grow-1 d-flex flex-column">
+            <a href="{{ url_for('main.post_detail', post_id=post.id) }}" 
+               class="h5 text-decoration-none text-dark mb-2 d-block"
+               style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
               {{ post.title }}
             </a>
 
@@ -65,7 +73,7 @@
       </div>
     {% endfor %}
   {% else %}
-    <div class="alert alert-info">{{ empty_message }}</div>
+  <div class="alert alert-info">Постів за вказаний період не знайдено.</div>
   {% endif %}
 </div>
 

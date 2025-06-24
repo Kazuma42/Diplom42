@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Користувачі{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Усі користувачі</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+  {% for user in users %}
+    <div class="col">
+      <a href="{{ url_for('main.profile', user_id=user.id) }}" class="text-decoration-none text-dark">
+        <div class="card shadow-sm text-center"> <!-- Добавил text-center для центрирования текста -->
+          <img src="{{ url_for('static', filename=user.avatar_url) if user.avatar_url else url_for('static', filename='default_avatar.png') }}" 
+               class="card-img-top rounded-circle mx-auto mt-3" 
+               alt="{{ user.username }} avatar" 
+               style="width: 100px; height: 100px; object-fit: cover;">
+          <div class="card-body p-2">
+            <h6 class="card-title mb-0">{{ user.username }}</h6> <!-- Ник по центру -->
+          </div>
+        </div>
+      </a>
+    </div>
+  {% else %}
+    <p>Користувачі відсутні.</p>
+  {% endfor %}
+</div>
+</div>
+{% endblock %}

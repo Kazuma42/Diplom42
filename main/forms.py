@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField, SubmitField, FileField
+from wtforms import StringField, PasswordField, TextAreaField, SubmitField, FileField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional
 from flask_wtf.file import FileAllowed
 
@@ -23,10 +23,19 @@ class EditProfileForm(FlaskForm):
     welcome = TextAreaField("Привітання", validators=[Optional()])
     membership_duration = StringField("Стаж", validators=[Optional()])
     avatar = FileField("Аватар", validators=[Optional(), FileAllowed(['jpg', 'png', 'jpeg'], 'Тільки зображення!')])
+    preferred_lang = SelectField(
+        'Мова інтерфейсу',
+        choices=[('uk', 'Українська'), ('en', 'English')],
+        validators=[Optional()]
+    )
     
 class PostForm(FlaskForm):
-    title = StringField('Заголовок', validators=[DataRequired(), Length(max=100)])
+    title = StringField('Заголовок', validators=[DataRequired()])
     text = TextAreaField('Текст', validators=[DataRequired()])
     tags = StringField('Теги')
     image = FileField('Изображение', validators=[FileAllowed(['jpg', 'png', 'jpeg', 'gif'], 'Только картинки!')])
     submit = SubmitField('Опубликовать')
+
+class EditCommentForm(FlaskForm):
+    text = TextAreaField('Текст коментаря', validators=[DataRequired()])
+    submit = SubmitField('Зберегти')

@@ -23,41 +23,43 @@
 
       <!-- Форма голосування -->
       <div class="d-flex gap-3 mb-4">
-        <form method="post" class="d-flex gap-2 flex-fill">
-          <button type="submit" name="action" value="like" class="btn btn-success w-100">
-            👍 Подобається
+        <form method="post" action="{{ url_for('main.vote_post', post_id=post.id) }}" class="d-flex gap-3 mt-3">
+          <button type="submit" name="vote" value="like"
+                  class="btn btn-success d-flex align-items-center gap-2 {% if user_vote == 1 %}active{% endif %}">
+            👍 Подобається <span class="badge bg-light text-dark">{{ likes }}</span>
           </button>
-          <button type="submit" name="action" value="dislike" class="btn btn-danger w-100">
-            👎 Не подобається
+
+          <button type="submit" name="vote" value="dislike"
+                  class="btn btn-danger d-flex align-items-center gap-2 {% if user_vote == -1 %}active{% endif %}">
+            👎 Не подобається <span class="badge bg-light text-dark">{{ dislikes }}</span>
           </button>
         </form>
       </div>
 
-      <!-- Статистика -->
-      <ul class="list-inline mb-4">
-        <li class="list-inline-item me-4"><strong>👍 {{ post.likes }}</strong> Лайків</li>
-        <li class="list-inline-item me-4"><strong>👎 {{ post.dislikes }}</strong> Дизлайків</li>
-      </ul>
+
 
       <!-- Коментарі -->
       <div class="mb-5">
-        <h4 class="mb-3">Коментарії</h4>
-        {% for comment in comments %}
-        <div class="card mb-3">
-          <div class="card-body py-2 px-3">
-            <p class="mb-1">{{ comment.text }}</p>
-            <small class="text-muted">Залишено: {{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+          <h4 class="mb-3">Коментарії</h4>
+          {% for comment in comments %}
+          <div class="card mb-3">
+            <div class="card-body py-2 px-3">
+              <p class="mb-1">{{ comment.text }}</p>
+              <small class="text-muted">
+                <a href="{{ url_for('main.user_activity', user_id=comment.user.id) }}"><strong>{{ comment.user.username }}</strong></a> |
+                Залишено: {{ comment.created_at.replace(tzinfo=pytz.utc).astimezone(pytz.timezone('Europe/Kyiv')).strftime('%Y-%m-%d %H:%M') if comment.created_at else '' }}
+              </small>
+            </div>
           </div>
-        </div>
-        {% else %}
-        <p class="text-muted">Поки що немає коментарів.</p>
-        {% endfor %}
+          {% else %}
+          <p class="text-muted">Поки що немає коментарів.</p>
+          {% endfor %}
       </div>
 
       <!-- Форма додавання коментаря -->
       <div>
         <h5 class="mb-3">Залишити коментарій</h5>
-        <form method="post">
+        <form method="post" action="{{ url_for('main.comment', post_id=post.id) }}">
           <div class="mb-3">
             <textarea class="form-control" id="comment" name="comment" rows="3" placeholder="Ваш коментар тут..."></textarea>
           </div>

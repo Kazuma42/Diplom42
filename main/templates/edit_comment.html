@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Редагувати коментар{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Редагувати коментар</h2>
+
+  <!-- Заголовок поста -->
+  <div class="mb-4 p-3 border rounded-4 shadow-sm">
+    <h5>Коментар до поста:</h5>
+    <div class="h6 mb-0" style="color: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+      {{ comment.post.title }}
+    </div>
+  </div>
+
+  <!-- Форма редагирования -->
+  <form method="POST">
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+      {{ form.text.label(class="form-label") }}
+      {{ form.text(class="form-control", rows=5) }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Зберегти</button>
+    <a href="{{ url_for('main.user_activity', user_id=current_user.id) }}" class="btn btn-secondary ms-2">Відмінити</a>
+  </form>
+</div>
+{% endblock %}

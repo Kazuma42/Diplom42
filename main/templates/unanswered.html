@@ -15,15 +15,17 @@
       <div class="card mb-3 shadow-sm border rounded-4 p-4">
         <div class="d-flex">
           <!-- Статистика -->
-          <div class="text-center me-4" style="width: 110px;">
-            <div class="fw-semibold small text-muted mb-2">{{ post.votes or 0 }} голосів</div>
-            <div class="fw-semibold small text-muted mb-2">0 відповідей</div>
-            <div class="fw-semibold small text-muted">{{ post.views or 0 }} переглядів</div>
+          <div class="text-center me-4" style="width: 110px; font-size: 0.85rem; color: #6c757d; flex-shrink: 0;">
+            <div class="fw-semibold small mb-2">{{ post.votes or 0 }} голосів</div>
+            <div class="fw-semibold small mb-2">{{ post.comments|length or 0 }} відповідей</div>
+            <div class="fw-semibold small">{{ post.views or 0 }} переглядів</div>
           </div>
 
           <!-- Основна частина -->
-          <div class="flex-grow-1">
-            <a href="{{ url_for('main.post_detail', post_id=post.id) }}" class="h5 text-decoration-none text-dark mb-2 d-block">
+          <div class="flex-grow-1 d-flex flex-column">
+            <a href="{{ url_for('main.post_detail', post_id=post.id) }}" 
+               class="h5 text-decoration-none text-dark mb-2 d-block"
+               style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
               {{ post.title }}
             </a>
 
@@ -46,7 +48,7 @@
       </div>
     {% endfor %}
   {% else %}
-    <div class="alert alert-info">Немає питань без відповідей.</div>
+    <div class="alert alert-info">Пости відсутні.</div>
   {% endif %}
 </div>
 {% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Активність користувача - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Активність користувача: {{ user.username }}</h2>
+
+  <h4 class="mt-4">Пости користувача</h4>
+  {% if posts %}
+    {% for post in posts %}
+      <div class="card mb-4 shadow-sm p-4 rounded-4">
+        <a href="{{ url_for('main.post_detail', post_id=post.id) }}" class="h5 text-decoration-none text-dark mb-2 d-block" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          {{ post.title }}
+        </a>
+        <p>{{ post.text[:200] }}{% if post.text|length > 200 %}...{% endif %}</p>
+        {% if current_user.is_authenticated and current_user.id == post.author_id %}
+          <div class="d-flex gap-2 mt-3">
+            <a href="{{ url_for('main.edit_post', post_id=post.id) }}" class="btn btn-sm btn-outline-primary">Редагувати</a>
+            <form action="{{ url_for('main.delete_post', post_id=post.id) }}" method="POST" onsubmit="return confirm('Ви впевнені, що хочете видалити цей пост?');">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Видалити</button>
+            </form>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>Пости відсутні.</p>
+  {% endif %}
+
+  <h4 class="mt-5">Коментарі користувача</h4>
+  {% if comments %}
+    {% for comment in comments %}
+      <div class="card mb-4 shadow-sm p-4 rounded-4">
+        <!-- Заголовок поста как простой текст -->
+        <div class="h6 text-dark mb-2" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          {{ comment.post.title }}
+        </div>
+        <p>{{ comment.text[:200] }}{% if comment.text|length > 200 %}...{% endif %}</p>
+
+        <div class="mb-3">
+          <a href="{{ url_for('main.post_detail', post_id=comment.post.id) }}" class="btn btn-link p-0">Перейти на пост</a>
+        </div>
+
+        {% if current_user.is_authenticated and current_user.id == comment.user_id %}
+          <div class="d-flex gap-2">
+            <a href="{{ url_for('main.edit_comment', comment_id=comment.id) }}" class="btn btn-sm btn-outline-primary">Редагувати</a>
+            <form action="{{ url_for('main.delete_comment', comment_id=comment.id) }}" method="POST" onsubmit="return confirm('Ви впевнені, що хочете видалити цей коментар?');">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Видалити</button>
+            </form>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>Коментарі відсутні.</p>
+  {% endif %}
+</div>
+{% endblock %}

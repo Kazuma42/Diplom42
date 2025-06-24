@@ -32,10 +32,26 @@ class Comment(db.Model):
     __tablename__ = 'comment'
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
-
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    user = db.relationship('User', backref='comments')
     post = db.relationship('Post', back_populates='comments', overlaps="comments,post")
+
+    votes = db.relationship('CommentVote', back_populates='comment', cascade='all, delete-orphan')
+
+
+class CommentVote(db.Model):
+    __tablename__ = 'comment_vote'
+    id = db.Column(db.Integer, primary_key=True)
+    comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    vote = db.Column(db.Integer, nullable=False)  # 1 — лайк, -1 — дизлайк
+
+    comment = db.relationship('Comment', back_populates='votes')
+    user = db.relationship('User', back_populates='comment_votes')
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -44,7 +60,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
-    avatar_url = db.Column(db.String(200), default='/static/default_avatar.png')
+    avatar_url = db.Column(db.String(255), default='default_avatar.png')
+    preferred_lang = db.Column(db.String(10), default='uk', nullable=False)
 
     description = db.Column(db.Text, default='', nullable=False)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
@@ -57,6 +74,7 @@ class User(db.Model, UserMixin):
 
     about_section = db.Column(db.Text, default='', nullable=True)   # Блок "о себе"
     welcome_section = db.Column(db.Text, default='', nullable=True) # Приветственный текст
+    comment_votes = db.relationship('CommentVote', back_populates='user', cascade='all, delete-orphan')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -70,3 +88,18 @@ class Tag(db.Model):
     name = db.Column(db.String(64), unique=True, nullable=False)
     description = db.Column(db.Text, nullable=True)
     posts = db.relationship('Post', secondary=post_tags, back_populates='tags')
+
+class Question(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+
+
+class PostVote(db.Model):
+    __tablename__ = 'post_vote'
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    value = db.Column(db.Integer, nullable=False)  # 1 = like, -1 = dislike
+
+    post = db.relationship('Post', backref='votes_detail')
+    user = db.relationship('User', backref='votes')

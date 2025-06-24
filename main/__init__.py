@@ -2,7 +2,9 @@ from flask import Flask, request, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
-from flask_babel import Babel, get_locale
+from flask_babel import Babel
+from flask_login import current_user  # обязательно импортируй current_user
+import pytz  # <--- импортируешь pytz
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -15,8 +17,8 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 def get_locale():
-    if 'lang' in request.args:
-        session['lang'] = request.args.get('lang')
+    if current_user.is_authenticated and current_user.preferred_lang:
+        return current_user.preferred_lang
     if 'lang' in session:
         return session['lang']
     return request.accept_languages.best_match(['uk', 'en'])
@@ -30,11 +32,12 @@ def create_app():
     migrate.init_app(app, db)
     babel.init_app(app)
 
-    babel.locale_selector_func = get_locale  # <-- регистрация функции выбора локали
+    babel.locale_selector_func = get_locale  # <-- назначение функции выбора языка
 
     from flask_babel import gettext as _
     app.jinja_env.globals.update(_=_)
     app.jinja_env.globals.update(get_locale=get_locale)
+    app.jinja_env.globals.update(pytz=pytz)  # <--- добавляешь pytz в глобальные переменные Jinja
 
     from main.routes.main_routes import main_bp
     app.register_blueprint(main_bp)

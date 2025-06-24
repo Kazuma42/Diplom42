@@ -190,3 +190,32 @@ header {
   font-size: 0.85rem;
 }
 
+
+/*like*/
+button.vote-button {
+    padding: 10px 20px;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+button.vote-button.like {
+    background-color: #28a745;
+}
+
+button.vote-button.dislike {
+    background-color: #dc3545;
+}
+
+button.vote-button .count {
+    background: white;
+    color: black;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 14px;
+}

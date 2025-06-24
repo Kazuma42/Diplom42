@@ -9,21 +9,26 @@
   </div>
 </div>
 
-  {% for post in posts %}
+{% for post in posts %}
   <div class="card mb-3 shadow-sm border rounded-4 p-4">
     <div class="d-flex">
+      
       <!-- Статистика -->
-      <div class="text-center me-4" style="width: 110px;">
-        <div class="fw-semibold small text-muted mb-2">{{ post.votes or 0 }} голосів</div>
-        <div class="fw-semibold small text-muted mb-2">{{ post.comments|length or 0 }} відповідей</div>
-        <div class="fw-semibold small text-muted">{{ post.views or 0 }} переглядів</div>
+      <div class="text-center me-4" style="width: 110px; font-size: 0.85rem; color: #6c757d; flex-shrink: 0;">
+        <div>{{ (post.likes_count - post.dislikes_count) or 0 }} голосів</div>
+        <div>{{ post.comments_count or 0 }} відповідей</div>
+        <div>{{ post.views or 0 }} переглядів</div>
       </div>
 
       <!-- Основна частина -->
-      <div class="flex-grow-1">
-        <a href="{{ url_for('main.post_detail', post_id=post.id) }}" class="h5 text-decoration-none text-dark mb-2 d-block">
-          {{ post.title }}
-        </a>
+      <div class="flex-grow-1 d-flex flex-column">
+        <div class="d-flex align-items-center mb-2">
+          <a href="{{ url_for('main.post_detail', post_id=post.id) }}" 
+             class="text-decoration-none text-dark fw-semibold flex-grow-1"
+             style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
+            {{ post.title }}
+          </a>
+        </div>
 
         {% if post.tags %}
         <div class="mb-2">
@@ -37,13 +42,13 @@
 
         <div class="text-muted small">
           <i class="bi bi-person"></i>
-          {{ post.author.username }} — {{ post.created_at.strftime('%d.%m.%Y %H:%M') }}
+          {{ post.author.username }} — {{ post.created_at.replace(tzinfo=pytz.utc).astimezone(pytz.timezone('Europe/Kyiv')).strftime('%d.%m.%Y %H:%M') }}
         </div>
       </div>
     </div>
   </div>
-  {% else %}
-    <div class="alert alert-info">Поки що немає постів.</div>
-  {% endfor %}
+{% else %}
+  <div class="alert alert-info">Поки що немає постів.</div>
+{% endfor %}
 </div>
 {% endblock %}
