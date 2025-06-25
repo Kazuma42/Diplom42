@@ -8,7 +8,10 @@
     <!-- Заголовок: аватар + ім'я + статус -->
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
-        <img src="{{ url_for('static', filename=user.avatar_url) }}" class="rounded-circle me-3" style="width: 70px; height: 70px;" alt="avatar">
+        <img src="{{ url_for('static', filename=user.avatar_url) }}"
+             class="rounded-circle me-3"
+             style="width: 70px; height: 70px;"
+             alt="avatar">
         <div>
           <h2 class="mb-0">{{ user.username }}</h2>
           {% if user.is_online %}
@@ -61,7 +64,7 @@
         <strong>{{ user.comments|length }}</strong><br>Відповіді
       </div>
       <div class="col">
-        <strong>{{ user.reputation or 0 }}</strong><br>Репутація
+        <strong>{{ user.reputation }}</strong><br>Репутація
       </div>
     </div>
 

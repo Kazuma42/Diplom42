@@ -1,5 +1,7 @@
 # models.py
 from datetime import datetime
+from typing import Self
+from sqlalchemy import func
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
@@ -82,6 +84,19 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
     
+
+    def calculate_reputation(self):
+        from main import db
+        from sqlalchemy import func
+        from main.models import PostVote, CommentVote, Post, Comment
+
+        post_votes_sum = db.session.query(func.coalesce(func.sum(PostVote.value), 0))\
+            .join(Post).filter(Post.author_id == self.id).scalar()
+
+        comment_votes_sum = db.session.query(func.coalesce(func.sum(CommentVote.vote), 0))\
+            .join(Comment).filter(Comment.user_id == self.id).scalar()
+
+        self.reputation = post_votes_sum + comment_votes_sum
 
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)

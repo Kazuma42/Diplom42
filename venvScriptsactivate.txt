@@ -1,0 +1,46 @@
+venv\Scripts\activate
+
+#app.py
+from flask import Flask
+from main.models import db
+from main.routes.main_routes import main_bp
+from flask_login import LoginManager
+
+
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///monky.db'
+db.init_app(app)
+app.secret_key = 'anna'
+
+Login_manager = LoginManager()
+
+
+app.register_blueprint(main_bp)
+
+
+with app.app_context():
+    db.drop_all()   # 🛑 Удаляет ВСЕ таблицы (и данные)
+    db.create_all()  # ✅ Создает новые таблицы с полями likes/dislikes
+    
+
+Login_manager.init_app(app)
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+div class="col-md-4 text-end">
+           <div class="col-md-3 text-end">
+              {% if current_user.is_authenticated %}
+                <span class="me-2">Вітаю, {{ current_user.username }}!</span>
+                <a href="{{ url_for('main.logout') }}" class="btn btn-outline-danger me-2">Вийти</a>
+              {% else %}
+                <a href="{{ url_for('main.login') }}" class="btn btn-outline-primary me-2">Login</a>
+                <a href="{{ url_for('main.register') }}" class="btn btn-warning">Реєстрація</a>
+              {% endif %}
+            </div>
+
+
+
+me-3" style="width: 70px; height: 70px;" alt="avatar">

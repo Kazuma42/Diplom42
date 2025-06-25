@@ -235,16 +235,21 @@ def register():
         password = request.form['password']
 
         if User.query.filter((User.username == username) | (User.email == email)).first():
-            flash("ім'я користувача або email уже занятий")
+            flash("Ім'я користувача або email вже зайняті.")
             return redirect(url_for('main.register'))
 
-        new_user = User(username=username, email=email)
-        new_user.set_password(password)  
+        # 👇 Устанавливаем путь к дефолтной аватарке
+        new_user = User(
+            username=username,
+            email=email,
+            avatar_url='uploads/avatars/default_avatar.png'
+        )
+        new_user.set_password(password)
 
         db.session.add(new_user)
         db.session.commit()
 
-        login_user(new_user)  
+        login_user(new_user)
 
         return redirect(url_for('main.index'))
 
@@ -286,7 +291,8 @@ def logout():
 def profile(user_id):
     user = User.query.get_or_404(user_id)
     posts = Post.query.filter_by(author_id=user.id).all()
-    return render_template('profile.html', user=user, posts=posts)
+    reputation = user.calculate_reputation()
+    return render_template('profile.html', user=user, posts=posts, reputation=reputation)
 
 
 @main_bp.route('/edit_profile', methods=['GET', 'POST'])
